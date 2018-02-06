@@ -14,6 +14,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "react-yandex-maps": "^2.1.4"
+    "react-yandex-maps": "^2.1.4",
+    "yandex-map-react": "^1.1.1"
   }
 }
