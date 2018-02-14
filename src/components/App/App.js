@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import List from '../List/List';
 import Area from '../Area/Area';
 import ErrorBox from '../ErrorBox/ErrorBox';
+import MapContainer from '../Map/Map';
 
 
 const AppWrapper = styled.div`
@@ -26,12 +27,6 @@ const ListWrapper = styled.div`
 
 class App extends PureComponent {
 
-  componentDidMount(){
-    //var suggestView = new this.map.SuggestView('suggest'),
-  }
-
-
-
   render() {
     return (
       <AppWrapper>
@@ -40,7 +35,7 @@ class App extends PureComponent {
           <List />
           <ErrorBox />
         </ListWrapper>
-        
+        <MapContainer/>
       </AppWrapper>
     );
   }

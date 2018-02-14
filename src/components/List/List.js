@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
-import './List.css';
+//import './List.css';
 
 //const ListItem = ({className, children}) => <li className={className}>{children}</li>
 //const ListItem1 = (props) => <li>{props.children}</li>
