@@ -1,66 +1,51 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-
+import {connect} from 'react-redux';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
- 
-const mapState = { center: [55.76, 37.64], zoom: 12 };
+
+import {getItems} from '../../reducers';
+
 export let mapContext = null;
+
+const mapState = { center: [55.76, 37.64], zoom: 12 };
 
 
 class MapContainer extends Component {
 
-  state = {routes: []}
+  currentRoute = null;
 
   onAPIAvailable = (map) => {
     mapContext = map;
-    this.map = map;
+    //this.map = map;
     //const ref = this.mapRef;
     //let suggestView = new this.map.SuggestView('suggest');
-    console.log("arguments = ", this.ref);
-    console.log('ref = ', this.map);
-    console.log('map', map);
+    //console.log("arguments = ", this.ref);
+    //console.log('ref = ', this.map);
+    //console.log('map', map);
     //console.log('api = ', ymapAPI);
     
   }
+  componentDidUpdate(){
+    console.log("Map update");
+    let _this = this;
 
-
-  inputKeyDownHandler = (e) => {
-    let val = e.target.value;
-
-    if(e.keyCode === 13){
-      var myGeocoder = this.map.geocode(val);
-      const _this = this;
-      e.target.value = '';
-
-      /* myGeocoder.then(
-        (res) => {
-   
-          let firstGeoObject = res.geoObjects.get(0);
-  
-          if(firstGeoObject){
-            let coords = firstGeoObject.geometry.getCoordinates();
-            //let bounds = firstGeoObject.properties.get('boundedBy');
-
-            _this.state.routes.push(coords);
-            _this.addRoute();
-            //console.log('Координаты геообъекта = ', coords);
-            //console.log('Все данные геообъекта: ', firstGeoObject.properties.getAll());
-            //console.log('Метаданные ответа геокодера: ', res.metaData);
-            //console.log('Метаданные геокодера: ', firstGeoObject.properties.get('metaDataProperty.GeocoderMetaData'));
-          }else{
-            console.log("Объект не найден");
-          }
-          
-        },
-        (err) => {
-          // обработка ошибки
-          console.log(err);
-          console.log("Ошибка");
-        }
-    ); */
-      
+    const routes = this.props.items.map( el => el.coords );
+    if(this.currentRoute){
+      _this.mapRef.geoObjects.remove(this.currentRoute);
     }
+    mapContext.route(routes, {
+      mapStateAutoApply: true
+
+    }).then(function (route) {
+      _this.currentRoute = route;
+      _this.mapRef.geoObjects.add(route);
+    });
+
   }
+
+  /* shouldComponentUpdate(){
+    return false;
+  } */
 
   addRoute = () => {
     console.log("add routes", this.state.routes);
@@ -111,4 +96,8 @@ class MapContainer extends Component {
   }
 }
 
-export default MapContainer;
+const mapStateToProps = state => ({
+  items: getItems(state)
+});
+
+export default connect(mapStateToProps, null)(MapContainer);

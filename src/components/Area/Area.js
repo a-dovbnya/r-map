@@ -36,7 +36,7 @@ class Area extends PureComponent {
 
     render (){
         return (
-            <Input onKeyDown = {this.keyDownHandler}/>
+            <Input onKeyDown = {this.keyDownHandler} placeholder="Введите точку маршрута"/>
         );
     }
     

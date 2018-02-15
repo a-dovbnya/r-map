@@ -38,7 +38,8 @@ class App extends PureComponent {
         <ListWrapper>
           <Area />
           <List />
-          { this.props.isFething && <Loader size="20px" gap={4} color="green"/> }
+          <Loader size="20px" gap={4} color="green"/>
+          { this.props.isFetching && <Loader size="20px" gap={4} color="green"/> }
           { this.props.error.length > 0 && <ErrorBox error={this.props.error}/>}
         </ListWrapper>
         <MapContainer/>
