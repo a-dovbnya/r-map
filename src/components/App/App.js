@@ -1,10 +1,14 @@
 import React, { PureComponent } from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
+import Loader from 'react-svg-spinner';
 
 import List from '../List/List';
 import Area from '../Area/Area';
 import ErrorBox from '../ErrorBox/ErrorBox';
 import MapContainer from '../Map/Map';
+
+import {getError, getFetching} from '../../reducers';
 
 
 const AppWrapper = styled.div`
@@ -28,12 +32,14 @@ const ListWrapper = styled.div`
 class App extends PureComponent {
 
   render() {
+    console.log(this.props);
     return (
       <AppWrapper>
         <ListWrapper>
           <Area />
           <List />
-          <ErrorBox />
+          { this.props.isFething && <Loader size="20px" gap={4} color="green"/> }
+          { this.props.error.length > 0 && <ErrorBox error={this.props.error}/>}
         </ListWrapper>
         <MapContainer/>
       </AppWrapper>
@@ -41,4 +47,8 @@ class App extends PureComponent {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  isFetching: getFetching(state),
+  error: getError(state)
+});
+export default connect(mapStateToProps, null)(App);

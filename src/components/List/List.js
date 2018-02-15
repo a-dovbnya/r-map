@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
-//import './List.css';
+import {connect} from 'react-redux';
 
-//const ListItem = ({className, children}) => <li className={className}>{children}</li>
-//const ListItem1 = (props) => <li>{props.children}</li>
+import {getItems} from '../../reducers';
+import {sortData} from '../../actions/setPlace';
 
 const SortableItem = SortableElement(({value, className}) =>
   <div className = {className}>{value}</div>
@@ -13,14 +13,14 @@ const SortableItem = SortableElement(({value, className}) =>
 const SortableList = SortableContainer(({items, className}) => {
   return (
     <div className = {className}>
-      {items.map((value, index) => (
-        <ListItem key={`item-${index}`} index={index} value={value} />
+      {items.map((el, index) => (
+        <ListItem key={`item-${index}`} index={index} value={el.name} />
       ))}
     </div>
   );
 });
 
-// Стили
+// Styles
 const ListWrap = styled(SortableList)`
     border-radius: 2px;
     border: 1px solid #d9d9d9;
@@ -36,7 +36,7 @@ const ListItem = styled(SortableItem)`
     font-size: 14px;
     font-family: Arial, 'sans-serif';
     line-height: 1.5;
-    transition: 0.25s ease;
+    transition: background 0.25s ease;
 
     &:nth-last-child(1){
         border-bottom: none;
@@ -47,34 +47,31 @@ const ListItem = styled(SortableItem)`
     }
 `;
 
-// Исходные данные
-/* let list = [
-    'Item_1',
-    'Item_2',
-    'Item_3',
-    'Item_4'
-]; */
-
 
 class List extends Component {
-    state = {
-        items:  [
-            'Item_1',
-            'Item_2',
-            'Item_3',
-            'Item_4'
-        ]
-    }
+
     onSortEnd = ({oldIndex, newIndex}) => {
-        // массив с новыми данными 
-        console.log( arrayMove(this.state.items, oldIndex, newIndex));
-        this.setState({items: arrayMove(this.state.items, oldIndex, newIndex)});
-    };
+        let sortArray = arrayMove(this.props.items, oldIndex, newIndex)
+        this.props.sortData( sortArray );
+    }
+
     render (){
+        const itemsLength = this.props.items.length;
+
         return (
-            <ListWrap items={this.state.items} onSortEnd={this.onSortEnd} helperClass="draggable"/>
+            <div>
+                { this.props.items.length > 0 && <ListWrap items={this.props.items} onSortEnd={this.onSortEnd} helperClass="draggable"/> }
+            </div>
         );
     }
 }
 
-export default List;
+const mapStateToProps = state => ({
+    items: getItems(state)
+});
+
+const mapDispatchToProps = {
+    sortData
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);

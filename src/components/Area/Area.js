@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
+
+import {setPlace} from '../../actions/setPlace';
 
 const Input = styled.input`
     width: 100%;
@@ -23,11 +26,24 @@ const Input = styled.input`
 
 
 class Area extends PureComponent {
+
+    keyDownHandler = (e) => {
+        if(e.keyCode === 13){
+            this.props.setPlace(e.target.value);
+            e.target.value = '';
+        }
+    }
+
     render (){
         return (
-            <Input />
+            <Input onKeyDown = {this.keyDownHandler}/>
         );
     }
+    
 }
 
-export default Area;
+const mapDispatchToProps = {
+    setPlace
+};
+
+export default connect(null, mapDispatchToProps)(Area);

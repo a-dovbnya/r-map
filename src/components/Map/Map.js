@@ -4,19 +4,15 @@ import styled from 'styled-components';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
  
 const mapState = { center: [55.76, 37.64], zoom: 12 };
- 
-const MyPlacemark = () => (
-  <YMaps>
-    <Map state={mapState}/> 
-  </YMaps>
-); 
+export let mapContext = null;
+
 
 class MapContainer extends Component {
 
   state = {routes: []}
 
   onAPIAvailable = (map) => {
-    
+    mapContext = map;
     this.map = map;
     //const ref = this.mapRef;
     //let suggestView = new this.map.SuggestView('suggest');
@@ -27,10 +23,6 @@ class MapContainer extends Component {
     
   }
 
-  componentDidMount(){
-    //var suggestView = new this.map.SuggestView('suggest'),
-    //console.log('didMount = ',this.mapRef);
-  }
 
   inputKeyDownHandler = (e) => {
     let val = e.target.value;
@@ -40,7 +32,7 @@ class MapContainer extends Component {
       const _this = this;
       e.target.value = '';
 
-      myGeocoder.then(
+      /* myGeocoder.then(
         (res) => {
    
           let firstGeoObject = res.geoObjects.get(0);
@@ -65,7 +57,7 @@ class MapContainer extends Component {
           console.log(err);
           console.log("Ошибка");
         }
-    );
+    ); */
       
     }
   }
@@ -112,15 +104,9 @@ class MapContainer extends Component {
   render() {
     console.log('=== RENDER ===');
     return (
-        <div>
         <YMaps onApiAvaliable={(map) => this.onAPIAvailable(map)}>
-          <Map state={mapState} instanceRef = {ref => {this.mapRef = ref}}/>
+          <Map state={mapState} instanceRef = {ref => {this.mapRef = ref}} width="60%" height="500"/>
         </YMaps>
-        
-        <input type="text" id="suggest" onKeyDown={this.inputKeyDownHandler}/>
-
-        </div>
-
     );
   }
 }

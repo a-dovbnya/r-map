@@ -16,6 +16,7 @@
   "devDependencies": {
     "react-redux": "^5.0.6",
     "react-sortable-hoc": "^0.6.8",
+    "react-svg-spinner": "^0.2.0",
     "react-yandex-maps": "^2.1.4",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
