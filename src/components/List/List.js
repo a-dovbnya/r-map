@@ -6,15 +6,20 @@ import {connect} from 'react-redux';
 import {getItems} from '../../reducers';
 import {sortData} from '../../actions/setPlace';
 
-const SortableItem = SortableElement(({value, className}) =>
-  <div className = {className}>{value}</div>
+import RemoveBtn from '../RemoveBtn/RemoveBtn';
+
+const SortableItem = SortableElement(({value, className, dataId}) =>
+  <div className = {className} data-id={dataId}>
+    {value}
+    <RemoveBtn/>
+  </div>
 );
 
 const SortableList = SortableContainer(({items, className}) => {
   return (
     <div className = {className}>
       {items.map((el, index) => (
-        <ListItem key={`item-${index}`} index={index} value={el.name} />
+        <ListItem key={`item-${index}`} index={index} value={el.name} dataId={index}/>
       ))}
     </div>
   );
@@ -36,6 +41,7 @@ const ListItem = styled(SortableItem)`
     font-size: 14px;
     font-family: Arial, 'sans-serif';
     line-height: 1.5;
+    position: relative;
     transition: background 0.25s ease;
 
     &:nth-last-child(1){
@@ -50,6 +56,12 @@ const ListItem = styled(SortableItem)`
 
 class List extends Component {
 
+    shouldCancelStart = (e) => {
+        if( e.target.closest('[data-remove]') ){
+            return true;
+        }
+    }
+
     onSortEnd = ({oldIndex, newIndex}) => {
         let sortArray = arrayMove(this.props.items, oldIndex, newIndex)
         this.props.sortData( sortArray );
@@ -60,7 +72,14 @@ class List extends Component {
 
         return (
             <div>
-                { this.props.items.length > 0 && <ListWrap items={this.props.items} onSortEnd={this.onSortEnd} helperClass="draggable"/> }
+                { this.props.items.length > 0 && 
+                    <ListWrap 
+                        items={this.props.items} 
+                        onSortEnd={this.onSortEnd} 
+                        shouldCancelStart={this.shouldCancelStart} 
+                        helperClass="draggable"
+                    /> 
+                }
             </div>
         );
     }

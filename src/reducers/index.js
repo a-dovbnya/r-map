@@ -7,7 +7,7 @@ export default combineReducers({
 }); */
 
 import {handleActions} from 'redux-actions';
-import {setPlace, receivedData, receivedError, sortData} from '../actions/setPlace';
+import {setPlace, receivedData, receivedError, sortData, removeItem} from '../actions/setPlace';
 
 const initialState = {
     mapItems: [],
@@ -33,6 +33,11 @@ export default handleActions({
         error: action.payload,
     }),
     [sortData]: (state, action) => ({
+        ...state,
+        error: '',
+        mapItems: action.payload
+    }),
+    [removeItem]: (state, action) => ({
         ...state,
         mapItems: action.payload
     })

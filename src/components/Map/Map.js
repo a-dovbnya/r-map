@@ -7,7 +7,7 @@ import {getItems} from '../../reducers';
 
 export let mapContext = null;
 
-const mapState = { center: [55.76, 37.64], zoom: 12 };
+const mapState = { center: [55.75, 37.62], zoom: 12 };
 
 
 class MapContainer extends Component {
@@ -29,7 +29,8 @@ class MapContainer extends Component {
     console.log("Map update");
     let _this = this;
 
-    const routes = this.props.items.map( el => el.coords );
+    const routes = this.props.items.map( el => el.name );
+
     if(this.currentRoute){
       _this.mapRef.geoObjects.remove(this.currentRoute);
     }
