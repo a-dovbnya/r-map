@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
 
 import {getItems} from '../../reducers';
+import {sortData} from '../../actions/setPlace';
 
 export let mapContext = null;
 
@@ -15,31 +16,65 @@ class MapContainer extends Component {
   currentRoute = null;
 
   onAPIAvailable = (map) => {
-    mapContext = map;
-    //this.map = map;
-    //const ref = this.mapRef;
-    //let suggestView = new this.map.SuggestView('suggest');
-    //console.log("arguments = ", this.ref);
-    //console.log('ref = ', this.map);
-    //console.log('map', map);
-    //console.log('api = ', ymapAPI);
-    
+    mapContext = map; 
   }
+
   componentDidUpdate(){
     console.log("Map update");
     let _this = this;
 
-    const routes = this.props.items.map( el => el.name );
+    const routes = this.props.items.map( el => el.coords );
 
     if(this.currentRoute){
-      _this.mapRef.geoObjects.remove(this.currentRoute);
+      this.mapRef.geoObjects.remove(this.currentRoute);
     }
     mapContext.route(routes, {
-      mapStateAutoApply: true
-
+      mapStateAutoApply: true,
+      reverseGeocoding: true
     }).then(function (route) {
       _this.currentRoute = route;
+      //let newItems = [];
+
+      // draggable route parts
+      route.editor.start({ addWayPoints: false, removeWayPoints: true, editWayPoints: true });
+      route.getWayPoints().options.set({
+          draggable: true
+      });
+
+      route.getWayPoints().each(function(point, i){
+        
+        point.events.add('dragend', (e) => {
+          const coords = e.get('target').geometry.getCoordinates();
+          const index = i;
+          console.log('index= ', index);
+
+          mapContext.geocode(coords).then((res) => {
+            const txt = res.geoObjects.get(0).properties.get('text');
+            console.log('index2= ', index);
+            const newItems = _this.props.items.map( (el, i) => {
+
+              if(i == index){
+                el.name = txt;
+                el.coords = coords;
+              }
+              return el;
+            });
+            console.log('newItems = ', newItems);
+            _this.props.sortData(newItems);
+
+            //e.get('target').properties.set("balloonContent", firstGeoObject.properties.get('text'));
+          });
+        });
+
+      });
+      
+      // remove old routes
       _this.mapRef.geoObjects.add(route);
+
+      route.getWayPoints().each((point, i) => {
+        point.properties.set({balloonContentHeader: 'Заголовок балуна'});
+      });
+     // _this.props.sortData(newItems);
     });
 
   }
@@ -72,6 +107,7 @@ class MapContainer extends Component {
         
         // bad example
         route.getWayPoints().each(function(wayPoint){
+          console.log('arguments = ', arguments);
           wayPoint.events.add("dragend", function(e){
               var coords = e.get('target').geometry.getCoordinates()
               _this.map.geocode(coords).then(function (res) {
@@ -83,7 +119,11 @@ class MapContainer extends Component {
     
         // добавляем маршрут на карту
         console.log("geo objects = ", _this.mapRef);
+   
         _this.mapRef.geoObjects.add(route);
+        //_this.props.sortData( this.props.items );
+
+
     });
   }
 
@@ -101,4 +141,8 @@ const mapStateToProps = state => ({
   items: getItems(state)
 });
 
-export default connect(mapStateToProps, null)(MapContainer);
+const mapDispatchToProps = {
+  sortData
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapContainer);

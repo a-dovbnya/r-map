@@ -7,7 +7,7 @@ export default combineReducers({
 }); */
 
 import {handleActions} from 'redux-actions';
-import {setPlace, receivedData, receivedError, sortData, removeItem} from '../actions/setPlace';
+import {setPlace, receivedData, receivedError, sortData, removeItem, renameItem} from '../actions/setPlace';
 
 const initialState = {
     mapItems: [],
@@ -40,10 +40,10 @@ export default handleActions({
     [removeItem]: (state, action) => ({
         ...state,
         mapItems: action.payload
-    })
+    }),
 
 }, initialState);
 
 export const getFetching = state => state.fetchItem;
 export const getError = state => state.error;
-export const getItems = state => {console.log('getItems = ',state.mapItems); return state.mapItems};
+export const getItems = state => state.mapItems;

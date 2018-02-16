@@ -36,7 +36,7 @@ const ListWrap = styled(SortableList)`
 
 const ListItem = styled(SortableItem)`
     border-bottom: 1px solid #e8e8e8;
-    padding: 5px 15px;
+    padding: 5px 35px 5px 15px;
     cursor: move;
     font-size: 14px;
     font-family: Arial, 'sans-serif';

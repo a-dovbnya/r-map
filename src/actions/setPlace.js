@@ -14,6 +14,9 @@ const actions = createActions({
   REMOVE: {
     ITEM: undefined
   }
+  /* RENAME: {
+    ITEM: undefined
+  } */
 });
 
 export const setPlace = actions.set.place;
@@ -21,3 +24,4 @@ export const receivedData = actions.received.data;
 export const receivedError = actions.received.error;
 export const sortData = actions.sort.data;
 export const removeItem = actions.remove.item;
+//export const renameItem = actions.rename.item;
