@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import {connect} from 'react-redux';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
@@ -11,7 +11,7 @@ export let mapContext = null;
 const mapState = { center: [55.75, 37.62], zoom: 12 };
 
 
-class MapContainer extends Component {
+class MapContainer extends PureComponent {
 
   currentRoute = null;
 
@@ -32,11 +32,20 @@ class MapContainer extends Component {
       mapStateAutoApply: true,
       reverseGeocoding: true
     }).then(function (route) {
+
+      /*route.getPaths().options.set({
+        // в балуне выводим только информацию о времени движения с учетом пробок
+        balloonContentBodyLayout: mapContext.templateLayoutFactory.createClass('$[properties.humanJamsTime]'),
+        // можно выставить настройки графики маршруту
+        strokeColor: '0000ffff',
+        opacity: 0.9
+    }); */
+
       _this.currentRoute = route;
       //let newItems = [];
 
       // draggable route parts
-      route.editor.start({ addWayPoints: false, removeWayPoints: true, editWayPoints: true });
+      //route.editor.start({ addWayPoints: false, removeWayPoints: true, editWayPoints: false });
       route.getWayPoints().options.set({
           draggable: true
       });
@@ -46,11 +55,9 @@ class MapContainer extends Component {
         point.events.add('dragend', (e) => {
           const coords = e.get('target').geometry.getCoordinates();
           const index = i;
-          console.log('index= ', index);
 
           mapContext.geocode(coords).then((res) => {
             const txt = res.geoObjects.get(0).properties.get('text');
-            console.log('index2= ', index);
             const newItems = _this.props.items.map( (el, i) => {
 
               if(i == index){
@@ -64,16 +71,16 @@ class MapContainer extends Component {
 
             //e.get('target').properties.set("balloonContent", firstGeoObject.properties.get('text'));
           });
-        });
+        }); 
 
       });
       
       // remove old routes
       _this.mapRef.geoObjects.add(route);
 
-      route.getWayPoints().each((point, i) => {
+      /* route.getWayPoints().each((point, i) => {
         point.properties.set({balloonContentHeader: 'Заголовок балуна'});
-      });
+      }); */
      // _this.props.sortData(newItems);
     });
 
@@ -106,21 +113,26 @@ class MapContainer extends Component {
         });
         
         // bad example
-        route.getWayPoints().each(function(wayPoint){
-          console.log('arguments = ', arguments);
-          wayPoint.events.add("dragend", function(e){
-              var coords = e.get('target').geometry.getCoordinates()
-              _this.map.geocode(coords).then(function (res) {
+        route.getWayPoints().each((wayPoint) => {
+
+          wayPoint.events.add("dragend", (e) => {
+              var coords = e.get('target').geometry.getCoordinates();
+              _this.map.geocode(coords).then((res) => {
                   var firstGeoObject = res.geoObjects.get(0);
                   e.get('target').properties.set("balloonContent", firstGeoObject.properties.get('text'));
               });
           })
+
         });
     
         // добавляем маршрут на карту
         console.log("geo objects = ", _this.mapRef);
    
         _this.mapRef.geoObjects.add(route);
+
+        route.getWayPoints().each((wayPoint) => {
+          wayPoint.properties({balloonContent: 'some text'});
+        });
         //_this.props.sortData( this.props.items );
 
 
@@ -129,9 +141,30 @@ class MapContainer extends Component {
 
   render() {
     console.log('=== RENDER ===');
+    let geometry = {}; let properties = {};
+
+    if(this.props.items.length === 1){
+      geometry = {coordinates: this.props.items[0].coords};
+      properties = {balloonContent: this.props.items[0].name};
+
+      mapState.center = this.props.items[0].coords;
+      console.log('mapStateCenter = ', mapState.center);
+
+    }
+    
+   
     return (
         <YMaps onApiAvaliable={(map) => this.onAPIAvailable(map)}>
-          <Map state={mapState} instanceRef = {ref => {this.mapRef = ref}} width="60%" height="500"/>
+          <Map state={mapState} instanceRef = {ref => {this.mapRef = ref}} width="60%" height="500">
+          {(this.props.items.length === 1) ? 
+            <Placemark 
+              geometry={geometry}
+              properties={properties}
+            /> 
+            :
+            null
+          }
+          </Map>
         </YMaps>
     );
   }
