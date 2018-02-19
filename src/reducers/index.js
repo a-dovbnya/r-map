@@ -6,44 +6,71 @@ export default combineReducers({
     mapItems
 }); */
 
-import {handleActions} from 'redux-actions';
-import {setPlace, receivedData, receivedError, sortData, removeItem, renameItem} from '../actions/setPlace';
+import { handleActions } from "redux-actions";
+import {
+  setPlace,
+  receivedData,
+  receivedError,
+  sortData,
+  removeItem,
+  renameItem,
+  mapLoaded,
+  getRoute
+} from "../actions/setPlace";
 
 const initialState = {
-    mapItems: [],
-    fetchItem: false,
-    error: ''
-}
+  mapItems: [],
+  fetchItem: false,
+  error: "",
+  mapLoading: true,
+  getRoute: false
+};
 
-export default handleActions({
+export default handleActions(
+  {
+    [mapLoaded]: (state, action) => ({
+      ...state,
+      mapLoading: false
+    }),
+    [getRoute]: (state, action) => ({
+      ...state,
+      getRoute: action.payload
+    }),
     [setPlace]: (state, action) => ({
-        ...state,
-        fetchItem: true,
-        error: ''
+      ...state,
+      fetchItem: true,
+      error: "",
+      getRoute: false
     }),
     [receivedData]: (state, action) => ({
-        //...state,
-        fetchItem: false,
-        error: '',
-        mapItems: [...state.mapItems, action.payload]
+      fetchItem: false,
+      error: "",
+      getRoute: false,
+      mapItems: [...state.mapItems, action.payload]
     }),
     [receivedError]: (state, action) => ({
-        ...state,
-        fetchItem: false,
-        error: action.payload,
+      ...state,
+      fetchItem: false,
+      getRoute: false,
+      error: action.payload
     }),
     [sortData]: (state, action) => ({
-        ...state,
-        error: '',
-        mapItems: action.payload
+      ...state,
+      error: "",
+      getRoute: false,
+      mapItems: action.payload
     }),
     [removeItem]: (state, action) => ({
-        ...state,
-        mapItems: action.payload
-    }),
-
-}, initialState);
+      ...state,
+      getRoute: false,
+      mapItems: action.payload
+    })
+  },
+  initialState
+);
 
 export const getFetching = state => state.fetchItem;
 export const getError = state => state.error;
 export const getItems = state => state.mapItems;
+export const isMapLoading = state => state.mapLoading;
+export const isGetRoute = state => state.getRoute;
