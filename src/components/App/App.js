@@ -76,7 +76,6 @@ const LoaderContainder = props => (
 
 class App extends PureComponent {
   render() {
-    console.log(this.props);
     return (
       <AppWrapper>
         {this.props.isMapLoading && <LoaderContainder text="Загрузка карты" />}
