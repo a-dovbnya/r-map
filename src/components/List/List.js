@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import _ from "lodash";
 
 import { getItems, isGetRoute } from "../../reducers";
-import { sortData } from "../../actions/setPlace";
+import { sortData } from "../../actions";
 
 import RemoveBtn from "../RemoveBtn/RemoveBtn";
 

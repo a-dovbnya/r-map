@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { removeItem } from "../../actions/setPlace";
+import { removeItem } from "../../actions";
 import { getItems } from "../../reducers";
 
 const IconWrapp = styled.div`

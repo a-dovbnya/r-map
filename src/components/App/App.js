@@ -20,7 +20,6 @@ const AppWrapper = styled.div`
   border: 1px solid #f0f0f0;
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
   max-width: 800px;
   min-height: 500px;
   position: relative;
@@ -32,6 +31,7 @@ const AppWrapper = styled.div`
 
   @media screen and (max-width: 650px) {
     border: none;
+    align-items: flex-start;
   }
 `;
 
@@ -106,7 +106,9 @@ class App extends PureComponent {
         <ListWrapper>
           <Area />
           <List />
-          {this.props.isFething && <Loader size="20px" gap={4} color="green" />}
+          {this.props.isFething && (
+            <Loader size="20px" gap={4} color="#cccccc" />
+          )}
           {this.props.error.length > 0 && <ErrorBox error={this.props.error} />}
         </ListWrapper>
         <MapWrapper>

@@ -16,7 +16,7 @@ import {
   renameItem,
   mapLoaded,
   getRoute
-} from "../actions/setPlace";
+} from "../actions";
 
 const initialState = {
   mapItems: [],
@@ -62,6 +62,7 @@ export default handleActions(
     }),
     [removeItem]: (state, action) => ({
       ...state,
+      error: "",
       getRoute: false,
       mapItems: action.payload
     })

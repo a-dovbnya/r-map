@@ -18,9 +18,6 @@ const actions = createActions({
     LOADED: undefined,
     GET_ROUTE: undefined
   }
-  /* RENAME: {
-    ITEM: undefined
-  } */
 });
 
 export const setPlace = actions.set.place;
@@ -30,4 +27,3 @@ export const sortData = actions.sort.data;
 export const removeItem = actions.remove.item;
 export const mapLoaded = actions.map.loaded;
 export const getRoute = actions.map.getRoute;
-//export const renameItem = actions.rename.item;

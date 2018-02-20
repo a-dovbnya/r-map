@@ -2,7 +2,8 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 
-import { setPlace } from "../../actions/setPlace";
+import { setPlace } from "../../actions";
+import { isGetRoute } from "../../reducers";
 
 const Input = styled.input`
   width: 100%;
@@ -36,13 +37,18 @@ class Area extends PureComponent {
       <Input
         onKeyDown={this.keyDownHandler}
         placeholder="Введите точку маршрута"
+        disabled={this.props.isGetRoute}
       />
     );
   }
 }
 
+const mapStateToProps = state => ({
+  isGetRoute: isGetRoute(state)
+});
+
 const mapDispatchToProps = {
   setPlace
 };
 
-export default connect(null, mapDispatchToProps)(Area);
+export default connect(mapStateToProps, mapDispatchToProps)(Area);
