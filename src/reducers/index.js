@@ -69,6 +69,7 @@ export default handleActions(
   initialState
 );
 
+// Selectors
 export const getFetching = state => state.fetchItem;
 export const getError = state => state.error;
 export const getItems = state => state.mapItems;

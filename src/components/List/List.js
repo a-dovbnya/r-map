@@ -6,8 +6,9 @@ import {
   arrayMove
 } from "react-sortable-hoc";
 import { connect } from "react-redux";
+import _ from "lodash";
 
-import { getItems } from "../../reducers";
+import { getItems, isGetRoute } from "../../reducers";
 import { sortData } from "../../actions/setPlace";
 
 import RemoveBtn from "../RemoveBtn/RemoveBtn";
@@ -71,7 +72,10 @@ class List extends PureComponent {
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     let sortArray = arrayMove(this.props.items, oldIndex, newIndex);
-    this.props.sortData(sortArray);
+
+    if (!_.isEqual(this.props.items, sortArray) && !this.props.isGetRoute) {
+      this.props.sortData(sortArray);
+    }
   };
 
   render() {
@@ -93,7 +97,8 @@ class List extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  items: getItems(state)
+  items: getItems(state),
+  isGetRoute: isGetRoute(state)
 });
 
 const mapDispatchToProps = {

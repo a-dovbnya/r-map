@@ -19,6 +19,8 @@ const AppWrapper = styled.div`
   margin: 100px auto;
   border: 1px solid #f0f0f0;
   display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   max-width: 800px;
   min-height: 500px;
   position: relative;
@@ -27,18 +29,36 @@ const AppWrapper = styled.div`
   & * {
     box-sizing: border-box;
   }
+
+  @media screen and (max-width: 650px) {
+    border: none;
+  }
 `;
 
 const ListWrapper = styled.div`
   width: 40%;
   border-right: 1px solid #f0f0f0;
   padding: 20px;
+
+  @media screen and (max-width: 650px) {
+    width: 100%;
+  }
 `;
 
 const MapWrapper = styled.div`
   width: 60%;
   position: relative;
   display: flex;
+
+  @media screen and (max-width: 650px) {
+    width: 100%;
+    min-height: 500px;
+    align-items: stretch;
+
+    div {
+      min-height: 350px;
+    }
+  }
 `;
 
 const LoaderWrapp = styled.div`
@@ -62,6 +82,10 @@ const LoaderWrapp = styled.div`
   }
   .loader {
     text-align: center;
+  }
+
+  @media screen and (max-width: 650px) {
+    display: block;
   }
 `;
 

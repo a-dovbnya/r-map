@@ -6,10 +6,6 @@ import { YMaps, Map, Placemark } from "react-yandex-maps";
 import { getItems } from "../../reducers";
 import { sortData, mapLoaded, getRoute } from "../../actions/setPlace";
 
-import _ from 'lodash';
-
-//import { yaMapsApi } from "../../api";
-
 export let mapContext = null;
 
 const mapState = { center: [55.75, 37.62], zoom: 12 };
@@ -18,95 +14,67 @@ class MapContainer extends PureComponent {
   currentRoute = null;
 
   onAPIAvailable = map => {
+    // Map is loaded
     mapContext = map;
     this.props.mapLoaded();
   };
 
-  getRoute = async (routes) => {
-    try{
-      const route = await mapContext.route(routes, {
-          mapStateAutoApply: true,
-          reverseGeocoding: true
-      });
-      return route;
-    }catch(e){
-      console.log('Error: ', e.message);
-    }
-  }
+  setCenter = coords => {
+    this.mapRef.setCenter(coords);
+  };
 
-  /* componentWillReceiveProps(nextProps) {
-    if (!_.isEqual(this.props.items, nextProps.items) && nextProps.items.length > 1){
-      console.log('receive props');
-      const _this = this;
-      const routes = this.props.items.map(el => el.coords);
-  
-      if (this.currentRoute) {
-        //this.mapRef.geoObjects.remove(this.currentRoute);
-        _this.currentRoute = null;
-      }
-  
-      // set loader
-      //this.props.getRoute(true);
-      //console.log('get route test', _this.getRoute(routes));
+  getWayPointProcessing = route => {
+    const _this = this;
+    const points = route.getWayPoints();
 
-  
-      mapContext
-        .route(routes, {
-          mapStateAutoApply: true,
-          reverseGeocoding: true
-        })
-        .then((route) => {
-          _this.currentRoute = route;
-  
-          // draggable route parts
-          route.getWayPoints().options.set({
-            draggable: true
+    // Way points is draggable
+    route.getWayPoints().options.set({
+      draggable: true
+    });
+
+    // Add events listener for the dragged point
+    points.each((point, i) => {
+      point.events.add("dragend", e => {
+        const coords = e.get("target").geometry.getCoordinates();
+        const index = i;
+
+        mapContext.geocode(coords).then(res => {
+          const txt = res.geoObjects.get(0).properties.get("text");
+          const newItems = _this.props.items.map((el, i) => {
+            if (i === index) {
+              return {
+                name: txt,
+                coords: coords
+              };
+            }
+            return el;
           });
-  
-          route.getWayPoints().each(function(point, i) {
-            point.events.add("dragend", e => {
-              const coords = e.get("target").geometry.getCoordinates();
-              const index = i;
-  
-              mapContext.geocode(coords).then(res => {
-                const txt = res.geoObjects.get(0).properties.get("text");
-                const newItems = _this.props.items.map((el, i) => {
-                  if (i == index) {
-                    el.name = txt;
-                    el.coords = coords;
-                  }
-                  return el;
-                });
-                console.log("newItems = ", newItems);
-                _this.props.sortData(newItems);
-              });
-            });
-          });
-  
-          // add routes
-          _this.mapRef.geoObjects.add(route);
-          // delete loader
-          _this.props.getRoute(false);
+
+          // Dispatch sorted data
+          _this.props.sortData(newItems);
         });
-    }
-  } */
+      });
+    });
+  };
 
   componentDidUpdate() {
-    console.log("component did update");
-    if (this.props.items.length < 2) return;
-
     const _this = this;
     const routes = this.props.items.map(el => el.coords);
 
+    // Remove current route
     if (this.currentRoute) {
       this.mapRef.geoObjects.remove(this.currentRoute);
-      _this.currentRoute = null;
+      this.currentRoute = null;
     }
 
-    // set loader
-    this.props.getRoute(true);
-    console.log('get route test', _this.getRoute(routes));
+    if (this.props.items.length < 2) {
+      return;
+    }
 
+    // Set loader
+    this.props.getRoute(true);
+
+    // Get routes
     mapContext
       .route(routes, {
         mapStateAutoApply: true,
@@ -114,52 +82,19 @@ class MapContainer extends PureComponent {
       })
       .then(function(route) {
         _this.currentRoute = route;
+        _this.getWayPointProcessing(route);
 
-        // draggable route parts
-        route.getWayPoints().options.set({
-          draggable: true
-        });
-
-        route.getWayPoints().each(function(point, i) {
-          point.events.add("dragend", e => {
-            const coords = e.get("target").geometry.getCoordinates();
-            const index = i;
-
-            mapContext.geocode(coords).then(res => {
-              const txt = res.geoObjects.get(0).properties.get("text");
-              const newItems = _this.props.items.map((el, i) => {
-                if (i == index) {
-                  el.name = txt;
-                  el.coords = coords;
-                }
-                return el;
-              });
-              console.log("newItems = ", newItems);
-              _this.props.sortData(newItems);
-            });
-          });
-        });
-
-        // add routes
+        // Sdd routes
         _this.mapRef.geoObjects.add(route);
-        // delete loader
+        // Remove loader
         _this.props.getRoute(false);
       });
   }
 
-  setCenter = coords => {
-    this.mapRef.setCenter(coords);
-  };
-
   render() {
     console.log("=== RENDER ===");
-    let geometry = {};
-    let properties = {};
 
     if (this.props.items.length === 1) {
-      geometry = { coordinates: this.props.items[0].coords };
-      properties = { balloonContent: this.props.items[0].name };
-
       this.setCenter(this.props.items[0].coords);
     }
 
@@ -171,10 +106,13 @@ class MapContainer extends PureComponent {
             this.mapRef = ref;
           }}
           width="100%"
-          height="500"
+          height="100%"
         >
           {this.props.items.length === 1 ? (
-            <Placemark geometry={geometry} properties={properties} />
+            <Placemark
+              geometry={{ coordinates: this.props.items[0].coords }}
+              properties={{ balloonContent: this.props.items[0].name }}
+            />
           ) : null}
         </Map>
       </YMaps>
