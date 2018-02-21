@@ -5,7 +5,6 @@ import Loader from "react-svg-spinner";
 
 import List from "../List/List";
 import Area from "../Area/Area";
-import ErrorBox from "../ErrorBox/ErrorBox";
 import MapContainer from "../Map/Map";
 
 import {
@@ -101,6 +100,15 @@ const AreaWrapper = styled.div`
   }
 `;
 
+const ErrorContainer = styled.div`
+  margin-top: 20px;
+  background: #f0f0f0;
+  padding: 10px 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(244, 54, 76, 0.8);
+`;
+
 const LoaderContainder = props => (
   <LoaderWrapp>
     <div className="loader">
@@ -109,6 +117,8 @@ const LoaderContainder = props => (
     </div>
   </LoaderWrapp>
 );
+
+const ErrorBox = props => <ErrorContainer>{props.error}</ErrorContainer>;
 
 class App extends PureComponent {
   render() {
