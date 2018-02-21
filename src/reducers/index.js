@@ -1,19 +1,11 @@
-/* import {combineReducers} from 'redux';
-
-import mapItems from './mapItems';
-
-export default combineReducers({
-    mapItems
-}); */
-
 import { handleActions } from "redux-actions";
+
 import {
   setPlace,
   receivedData,
   receivedError,
   sortData,
   removeItem,
-  renameItem,
   mapLoaded,
   getRoute
 } from "../actions";

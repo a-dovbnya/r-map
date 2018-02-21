@@ -5,19 +5,18 @@ import { getGeoCode } from "../api";
 
 function* setItemFlow(action) {
   try {
-    // Запрос на получение координат геообъекта
+    // Get coords for geoobject
     const response = yield call(getGeoCode, action.payload);
 
     if (response === null) {
-      // Диспатичим экшн с ошибкой "Объект не найден"
+      // Dispath Error
       yield put(receivedError("Объект не найден"));
     } else {
-      // Посылаем Экшн с данными
+      // Dispath action with data
       yield put(receivedData({ name: action.payload, coords: response }));
     }
   } catch (error) {
-    // Диспатичим экшн с ошибкой "Ошибка при выполнении запроса"
-    console.log("Ошибка в саге = ", error);
+    // Dispatch error
     yield put(receivedError("Ошибка при выполнении запроса"));
   }
 }

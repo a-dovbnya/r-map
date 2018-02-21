@@ -7,7 +7,7 @@ import { isGetRoute } from "../../reducers";
 
 const Input = styled.input`
   width: 100%;
-  padding: 4px 11px;
+  padding: 4px 38px 4px 11px;
   height: 32px;
   font-size: 14px;
   line-height: 1.5;
@@ -32,12 +32,21 @@ class Area extends PureComponent {
     }
   };
 
+  componentDidUpdate() {
+    if (!this.props.isGetRoute) {
+      this.input.focus();
+    }
+  }
+
   render() {
     return (
       <Input
         onKeyDown={this.keyDownHandler}
         placeholder="Введите точку маршрута"
         disabled={this.props.isGetRoute}
+        innerRef={input => {
+          this.input = input;
+        }}
       />
     );
   }

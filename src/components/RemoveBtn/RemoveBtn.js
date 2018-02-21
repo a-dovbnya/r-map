@@ -32,15 +32,12 @@ const IconWrapp = styled.div`
   }
 `;
 class RemoveBtn extends PureComponent {
-  testHandler = e => {
-    e.stopPropagation();
-  };
   removeClickHandler = e => {
     e.stopPropagation();
 
     const id = e.target.closest("[data-id]").getAttribute("data-id");
     const items = this.props.items.filter(
-      (el, index) => index !== parseInt(id)
+      (el, index) => index !== parseInt(id, 10)
     );
 
     this.props.removeItem(items);

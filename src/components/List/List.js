@@ -6,7 +6,6 @@ import {
   arrayMove
 } from "react-sortable-hoc";
 import { connect } from "react-redux";
-import _ from "lodash";
 
 import { getItems, isGetRoute } from "../../reducers";
 import { sortData } from "../../actions";
@@ -64,6 +63,22 @@ const ListItem = styled(SortableItem)`
 `;
 
 class List extends PureComponent {
+  isEqualShallow(arr1, arr2) {
+    let i, key;
+
+    for (i = 0; i < arr1.length; i++) {
+      for (key in arr1[i]) {
+        if (arr2[i].hasOwnProperty(key) && arr1[i][key] === arr2[i][key]) {
+          break;
+        } else {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
   shouldCancelStart = e => {
     if (e.target.closest("[data-remove]")) {
       return true;
@@ -73,14 +88,15 @@ class List extends PureComponent {
   onSortEnd = ({ oldIndex, newIndex }) => {
     let sortArray = arrayMove(this.props.items, oldIndex, newIndex);
 
-    if (!_.isEqual(this.props.items, sortArray) && !this.props.isGetRoute) {
+    if (
+      !this.isEqualShallow(this.props.items, sortArray) &&
+      !this.props.isGetRoute
+    ) {
       this.props.sortData(sortArray);
     }
   };
 
   render() {
-    const itemsLength = this.props.items.length;
-
     return (
       <div>
         {this.props.items.length > 0 && (

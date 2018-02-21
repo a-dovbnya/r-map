@@ -89,6 +89,18 @@ const LoaderWrapp = styled.div`
   }
 `;
 
+const AreaWrapper = styled.div`
+  position: relative;
+
+  [data-name="listLoader"] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    right: 10px;
+  }
+`;
+
 const LoaderContainder = props => (
   <LoaderWrapp>
     <div className="loader">
@@ -104,11 +116,18 @@ class App extends PureComponent {
       <AppWrapper>
         {this.props.isMapLoading && <LoaderContainder text="Загрузка карты" />}
         <ListWrapper>
-          <Area />
+          <AreaWrapper>
+            <Area />
+            {this.props.isFetching && (
+              <Loader
+                data-name="listLoader"
+                size="20px"
+                gap={4}
+                color="#cccccc"
+              />
+            )}
+          </AreaWrapper>
           <List />
-          {this.props.isFething && (
-            <Loader size="20px" gap={4} color="#cccccc" />
-          )}
           {this.props.error.length > 0 && <ErrorBox error={this.props.error} />}
         </ListWrapper>
         <MapWrapper>
