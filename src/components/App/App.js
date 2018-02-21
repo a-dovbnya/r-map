@@ -120,7 +120,7 @@ const LoaderContainder = props => (
 
 const ErrorBox = props => <ErrorContainer>{props.error}</ErrorContainer>;
 
-class App extends PureComponent {
+export class App extends PureComponent {
   render() {
     return (
       <AppWrapper>

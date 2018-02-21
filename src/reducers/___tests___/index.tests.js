@@ -7,6 +7,7 @@ import {
   mapLoaded,
   getRoute
 } from "../../actions";
+
 import mainReducer from "../";
 
 describe("Action getRoute", () => {

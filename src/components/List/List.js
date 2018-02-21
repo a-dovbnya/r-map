@@ -62,7 +62,7 @@ const ListItem = styled(SortableItem)`
   }
 `;
 
-class List extends PureComponent {
+export class List extends PureComponent {
   isEqualShallow(arr1, arr2) {
     let i, key;
 
