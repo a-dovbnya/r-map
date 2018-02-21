@@ -14,6 +14,8 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "react-redux": "^5.0.6",
     "react-sortable-hoc": "^0.6.8",
     "react-svg-spinner": "^0.2.0",
