@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-import { removeItem } from "../../actions";
+import { sortData } from "../../actions";
 import { getItems } from "../../reducers";
 
 const IconWrapp = styled.div`
@@ -40,7 +40,7 @@ class RemoveBtn extends PureComponent {
       (el, index) => index !== parseInt(id, 10)
     );
 
-    this.props.removeItem(items);
+    this.props.sortData(items);
   };
   render() {
     return (
@@ -70,6 +70,6 @@ const mapStateToProps = state => ({
   items: getItems(state)
 });
 const mapDispatchToProps = {
-  removeItem
+  sortData
 };
 export default connect(mapStateToProps, mapDispatchToProps)(RemoveBtn);

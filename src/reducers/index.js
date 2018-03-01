@@ -51,13 +51,13 @@ export default handleActions(
       error: "",
       getRoute: false,
       mapItems: action.payload
-    }),
+    }) /* ,
     [removeItem]: (state, action) => ({
       ...state,
       error: "",
       getRoute: false,
       mapItems: action.payload
-    })
+    }) */
   },
   initialState
 );

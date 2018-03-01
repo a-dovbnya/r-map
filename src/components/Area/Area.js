@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { setPlace } from "../../actions";
 import { isGetRoute } from "../../reducers";
 
-const Input = styled.input`
+export const Input = styled.input`
   width: 100%;
   padding: 4px 38px 4px 11px;
   height: 32px;
@@ -24,7 +24,7 @@ const Input = styled.input`
   }
 `;
 
-class Area extends PureComponent {
+export class Area extends PureComponent {
   keyDownHandler = e => {
     if (e.keyCode === 13) {
       this.props.setPlace(e.target.value);

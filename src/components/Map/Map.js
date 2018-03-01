@@ -13,7 +13,7 @@ const mapState = {
   controls: ["zoomControl"]
 };
 
-class MapContainer extends PureComponent {
+export class MapContainer extends PureComponent {
   currentRoute = null;
 
   onAPIAvailable = map => {
