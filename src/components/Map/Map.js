@@ -107,6 +107,9 @@ export class MapContainer extends PureComponent {
         this.addRoute(this.props.items.map(el => el.coords));
       }
     }
+    /* for (var i = 0; i < this.props.items.length; i++) {
+      this.addPlacemark(this.props.items[i]);
+    } */
 
     return false;
   }

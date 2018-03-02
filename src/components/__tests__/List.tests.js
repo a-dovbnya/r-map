@@ -19,4 +19,26 @@ describe("Component List -> ", () => {
       expect(wrapper.instance().isEqualShallow).toBeDefined();
     });
   });
+
+  describe("method isEqualShallow", () => {
+    it("work test", () => {
+      expect(
+        wrapper
+          .instance()
+          .isEqualShallow([{ test: "test_1" }], [{ test: "test_1" }])
+      ).toBe(true);
+
+      expect(
+        wrapper
+          .instance()
+          .isEqualShallow([{ test: "test_1" }], [{ test: "test_2" }])
+      ).toBe(false);
+
+      expect(
+        wrapper
+          .instance()
+          .isEqualShallow([{ test_1: "test_1" }], [{ test_2: "test_1" }])
+      ).toBe(false);
+    });
+  });
 });

@@ -69,7 +69,7 @@ export class List extends PureComponent {
     for (i = 0; i < arr1.length; i++) {
       for (key in arr1[i]) {
         if (arr2[i].hasOwnProperty(key) && arr1[i][key] === arr2[i][key]) {
-          break;
+          continue;
         } else {
           return false;
         }
