@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import { YMaps, Map } from "react-yandex-maps";
+import { YMaps, Map, Polyline, GeoObject } from "react-yandex-maps";
 
 import { getItems } from "../../reducers";
 import { sortData, mapLoaded, getRoute } from "../../actions";
@@ -91,7 +91,7 @@ export class MapContainer extends PureComponent {
 
   componentDidUpdate() {
     /*** Remove current geoObjects and route ***/
-    this.mapRef.geoObjects.removeAll();
+    //this.mapRef.geoObjects.removeAll();
     this.currentRoute = null;
 
     /*** Get new geoobjects ***/
@@ -104,7 +104,10 @@ export class MapContainer extends PureComponent {
         break;
       }
       default: {
-        this.addRoute(this.props.items.map(el => el.coords));
+        //this.addRoute(this.props.items.map(el => el.coords));
+        this.props.items.forEach(el => {
+          this.addPlacemark(el);
+        });
       }
     }
     /* for (var i = 0; i < this.props.items.length; i++) {
@@ -118,6 +121,40 @@ export class MapContainer extends PureComponent {
     if (this.props.items.length === 1) {
       this.setCenter(this.props.items[0].coords);
     }
+    if (this.props.items.length === 2) {
+      console.log("coords = ", [
+        [...this.props.items[0].coords],
+        [...this.props.items[1].coords]
+      ]);
+    }
+
+    let Lines = [];
+
+    for (let i = 0; i < this.props.items.length; i = i + 1) {
+      if (this.props.items[i + 1]) {
+        Lines.push(
+          <GeoObject
+            key={i}
+            geometry={{
+              type: "LineString",
+              coordinates: [
+                [...this.props.items[i].coords],
+                [...this.props.items[i + 1].coords]
+              ]
+            }}
+            // Setting the geo object options.
+            options={{
+              // The line color.
+              strokeColor: "#000000",
+              // Line width.
+              strokeWidth: 4
+            }}
+          />
+        );
+      } else break;
+    }
+
+    console.log(Lines);
 
     return (
       <YMaps onApiAvaliable={this.onAPIAvailable}>
@@ -128,7 +165,9 @@ export class MapContainer extends PureComponent {
           }}
           width="100%"
           height="100%"
-        />
+        >
+          {Lines}
+        </Map>
       </YMaps>
     );
   }
