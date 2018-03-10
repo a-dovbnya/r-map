@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import { YMaps, Map, Polyline, GeoObject } from "react-yandex-maps";
+import { YMaps, Map, GeoObject } from "react-yandex-maps";
 
 import { getItems } from "../../reducers";
 import { sortData, mapLoaded, getRoute } from "../../actions";
@@ -15,10 +15,12 @@ const mapState = {
 
 export class MapContainer extends PureComponent {
   currentRoute = null;
+  pmCollection = null;
 
   onAPIAvailable = map => {
     /*** Map is loaded ***/
     mapContext = map;
+    this.pmCollection = new mapContext.GeoObjectCollection();
     this.props.mapLoaded();
   };
 
@@ -34,40 +36,8 @@ export class MapContainer extends PureComponent {
     );
 
     this.addDragendListener(placemark);
-    this.mapRef.geoObjects.add(placemark);
-  };
-
-  addRoute = routes => {
-    const _this = this;
-
-    /*** Show loader ***/
-    _this.props.getRoute(true);
-
-    /*** Get route ***/
-    mapContext
-      .route(routes, {
-        mapStateAutoApply: true,
-        reverseGeocoding: true
-      })
-      .then(route => {
-        _this.currentRoute = route;
-        _this.wayPointProcessing(route);
-        _this.mapRef.geoObjects.add(route);
-        _this.props.getRoute(false);
-      });
-  };
-
-  wayPointProcessing = route => {
-    const points = route.getWayPoints();
-
-    /*** Way points is draggable ***/
-    points.options.set({
-      draggable: true
-    });
-
-    points.each((point, i) => {
-      this.addDragendListener(point, i);
-    });
+    this.pmCollection.add(placemark);
+    this.mapRef.geoObjects.add(this.pmCollection);
   };
 
   addDragendListener = (geoObj, index = 0) => {
@@ -89,72 +59,56 @@ export class MapContainer extends PureComponent {
     });
   };
 
+  getLines = () => {
+    const { items } = this.props;
+    let lines = [];
+
+    for (let i = 0; i < items.length; i = i + 1) {
+      if (items[i + 1]) {
+        lines = [
+          ...lines,
+          <GeoObject
+            key={i}
+            geometry={{
+              type: "LineString",
+              coordinates: [[...items[i].coords], [...items[i + 1].coords]]
+            }}
+            options={{
+              strokeColor: "#000000",
+              strokeWidth: 4
+            }}
+          />
+        ];
+      } else break;
+    }
+
+    return lines;
+  };
+
   componentDidUpdate() {
-    /*** Remove current geoObjects and route ***/
-    //this.mapRef.geoObjects.removeAll();
+    /*** Remove current geoObjects ***/
+    this.pmCollection.removeAll();
     this.currentRoute = null;
 
     /*** Get new geoobjects ***/
-    switch (this.props.items.length) {
-      case 0: {
-        break;
-      }
-      case 1: {
-        this.addPlacemark(this.props.items[0]);
-        break;
-      }
-      default: {
-        //this.addRoute(this.props.items.map(el => el.coords));
-        this.props.items.forEach(el => {
-          this.addPlacemark(el);
-        });
-      }
-    }
-    /* for (var i = 0; i < this.props.items.length; i++) {
-      this.addPlacemark(this.props.items[i]);
-    } */
+    this.props.items.forEach(el => {
+      this.addPlacemark(el);
+    });
 
-    return false;
+    /*** set Bounds ***/
+    if (this.pmCollection.getLength() > 1) {
+      this.mapRef.setBounds(this.pmCollection.getBounds());
+    }
+
+    //return false;
   }
 
   render() {
     if (this.props.items.length === 1) {
       this.setCenter(this.props.items[0].coords);
     }
-    if (this.props.items.length === 2) {
-      console.log("coords = ", [
-        [...this.props.items[0].coords],
-        [...this.props.items[1].coords]
-      ]);
-    }
 
-    let Lines = [];
-
-    for (let i = 0; i < this.props.items.length; i = i + 1) {
-      if (this.props.items[i + 1]) {
-        Lines.push(
-          <GeoObject
-            key={i}
-            geometry={{
-              type: "LineString",
-              coordinates: [
-                [...this.props.items[i].coords],
-                [...this.props.items[i + 1].coords]
-              ]
-            }}
-            // Setting the geo object options.
-            options={{
-              // The line color.
-              strokeColor: "#000000",
-              // Line width.
-              strokeWidth: 4
-            }}
-          />
-        );
-      } else break;
-    }
-
-    console.log(Lines);
+    const Lines = this.getLines();
 
     return (
       <YMaps onApiAvaliable={this.onAPIAvailable}>
