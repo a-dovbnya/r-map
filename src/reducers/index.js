@@ -5,7 +5,6 @@ import {
   receivedData,
   receivedError,
   sortData,
-  removeItem,
   mapLoaded,
   getRoute
 } from "../actions";
@@ -51,13 +50,7 @@ export default handleActions(
       error: "",
       getRoute: false,
       mapItems: action.payload
-    }) /* ,
-    [removeItem]: (state, action) => ({
-      ...state,
-      error: "",
-      getRoute: false,
-      mapItems: action.payload
-    }) */
+    })
   },
   initialState
 );

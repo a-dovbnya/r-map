@@ -14,7 +14,6 @@ const mapState = {
 };
 
 export class MapContainer extends PureComponent {
-  currentRoute = null;
   pmCollection = null;
 
   onAPIAvailable = map => {
@@ -35,9 +34,7 @@ export class MapContainer extends PureComponent {
       { draggable: true }
     );
 
-    this.addDragendListener(placemark);
     this.pmCollection.add(placemark);
-    this.mapRef.geoObjects.add(this.pmCollection);
   };
 
   addDragendListener = (geoObj, index = 0) => {
@@ -68,13 +65,14 @@ export class MapContainer extends PureComponent {
         lines = [
           ...lines,
           <GeoObject
-            key={i}
+            key={`go-${i}`}
             geometry={{
               type: "LineString",
               coordinates: [[...items[i].coords], [...items[i + 1].coords]]
             }}
             options={{
-              strokeColor: "#000000",
+              strokeColor: "#269afb",
+              opacity: 0.7,
               strokeWidth: 4
             }}
           />
@@ -88,27 +86,35 @@ export class MapContainer extends PureComponent {
   componentDidUpdate() {
     /*** Remove current geoObjects ***/
     this.pmCollection.removeAll();
-    this.currentRoute = null;
 
-    /*** Get new geoobjects ***/
+    /*** Get new geoObjects ***/
     this.props.items.forEach(el => {
       this.addPlacemark(el);
     });
+
+    /*** add dragend Event Listener to each placemark ***/
+    let cnt = 0;
+    this.pmCollection.each((el) => {
+      this.addDragendListener(el, cnt);
+      cnt++;
+    });
+
+    /*** add pmCollection to Map ***/
+    this.mapRef.geoObjects.add(this.pmCollection);
 
     /*** set Bounds ***/
     if (this.pmCollection.getLength() > 1) {
       this.mapRef.setBounds(this.pmCollection.getBounds());
     }
 
-    //return false;
   }
 
   render() {
+    const Lines = this.getLines();
+
     if (this.props.items.length === 1) {
       this.setCenter(this.props.items[0].coords);
     }
-
-    const Lines = this.getLines();
 
     return (
       <YMaps onApiAvaliable={this.onAPIAvailable}>
