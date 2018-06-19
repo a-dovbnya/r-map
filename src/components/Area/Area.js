@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
+//import styled from "styled-components";
 
 import { setPlace } from "../../actions";
 import { isGetRoute } from "../../reducers";
+import { Input } from "./styledComponents";
 
-export const Input = styled.input`
+/* export const Input = styled.input`
   width: 100%;
   padding: 4px 38px 4px 11px;
   height: 32px;
@@ -22,7 +23,7 @@ export const Input = styled.input`
     outline: 0;
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
   }
-`;
+`; */
 
 export class Area extends PureComponent {
   keyDownHandler = e => {
@@ -47,7 +48,7 @@ export class Area extends PureComponent {
         innerRef={input => {
           this.input = input;
         }}
-      />
+      /> 
     );
   }
 }
