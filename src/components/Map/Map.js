@@ -94,7 +94,7 @@ export class MapContainer extends PureComponent {
 
     /*** add dragend Event Listener to each placemark ***/
     let cnt = 0;
-    this.pmCollection.each((el) => {
+    this.pmCollection.each(el => {
       this.addDragendListener(el, cnt);
       cnt++;
     });
@@ -106,7 +106,6 @@ export class MapContainer extends PureComponent {
     if (this.pmCollection.getLength() > 1) {
       this.mapRef.setBounds(this.pmCollection.getBounds());
     }
-
   }
 
   render() {
@@ -143,4 +142,7 @@ const mapDispatchToProps = {
   getRoute
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MapContainer);

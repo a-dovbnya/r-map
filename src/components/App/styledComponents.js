@@ -4,7 +4,7 @@ export const AppWrapper = styled.div`
   margin: 100px auto;
   border: 1px solid #f0f0f0;
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   max-width: 800px;
   min-height: 500px;
   position: relative;

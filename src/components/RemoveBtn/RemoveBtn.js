@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { sortData } from "../../actions";
 import { getItems } from "../../reducers";
-import {IconWrapp} from "./styledComponents";
+import { IconWrapp } from "./styledComponents";
 
 class RemoveBtn extends PureComponent {
   removeClickHandler = e => {
@@ -46,4 +46,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   sortData
 };
-export default connect(mapStateToProps, mapDispatchToProps)(RemoveBtn);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RemoveBtn);

@@ -7,13 +7,13 @@ import Area from "../Area/Area";
 import MapContainer from "../Map/Map";
 
 import {
-  AppWrapper, 
-  ListWrapper, 
-  MapWrapper, 
-  LoaderWrapp,  
-  AreaWrapper, 
+  AppWrapper,
+  ListWrapper,
+  MapWrapper,
+  LoaderWrapp,
+  AreaWrapper,
   ErrorContainer
-} from './styledComponents';
+} from "./styledComponents";
 
 import {
   getError,
@@ -70,4 +70,7 @@ const mapStateToProps = state => ({
   isMapLoading: isMapLoading(state),
   isGetRoute: isGetRoute(state)
 });
-export default connect(mapStateToProps, null)(App);
+export default connect(
+  mapStateToProps,
+  null
+)(App);
