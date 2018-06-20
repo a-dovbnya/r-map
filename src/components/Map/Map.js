@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
+import PropTypes from 'prop-types';
 import { YMaps, Map, GeoObject } from "react-yandex-maps";
 
 import { getItems } from "../../reducers";
@@ -14,6 +15,10 @@ const mapState = {
 };
 
 export class MapContainer extends PureComponent {
+  static propTypes = {
+    items: PropTypes.array.isRequired
+  };
+
   pmCollection = null;
 
   onAPIAvailable = map => {

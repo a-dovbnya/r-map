@@ -1,7 +1,8 @@
 import React from "react";
 import { shallow } from "enzyme";
 
-import { Area, Input } from "../Area/Area";
+import { Area } from "../Area/Area";
+import {Input} from "../Area/styledComponents";
 
 describe("Component Area -> ", () => {
   const wrapper = shallow(<Area />);

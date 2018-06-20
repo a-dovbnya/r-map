@@ -33,13 +33,13 @@ describe("Component MapContainer -> ", () => {
       expect(wrapper.instance().addPlacemark).toBeDefined();
     });
 
-    it("addRoute", () => {
+    /* it("addRoute", () => {
       expect(wrapper.instance().addRoute).toBeDefined();
-    });
+    }); */
 
-    it("wayPointProcessing", () => {
+    /* it("wayPointProcessing", () => {
       expect(wrapper.instance().wayPointProcessing).toBeDefined();
-    });
+    }); */
 
     it("addDragendListener", () => {
       expect(wrapper.instance().addDragendListener).toBeDefined();
