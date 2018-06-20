@@ -7,6 +7,8 @@ export const StyledSortableList = Component =>
     padding: 0;
     list-style: none;
     margin-top: 20px;
+    overflow-y: auto;
+    max-height: 406px;
   `;
 export const StyledListItem = Component =>
   styled(Component)`

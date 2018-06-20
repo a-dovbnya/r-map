@@ -15,6 +15,6 @@ export const Input = styled.input`
   &:focus {
     border-color: #40a9ff;
     outline: 0;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(23, 29, 230, 0.2);
   }
 `;

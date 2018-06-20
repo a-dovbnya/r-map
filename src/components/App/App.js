@@ -25,7 +25,12 @@ import {
 const LoaderContainder = props => (
   <LoaderWrapp>
     <div className="loader">
-      <Loader size="70px" gap={4} color="#cccccc" />
+      <Loader
+        size="70px"
+        gap={4}
+        color="rgba(23, 29, 230, 0.4)"
+        thickness={2}
+      />
       <div className="loading-title">{props.text}</div>
     </div>
   </LoaderWrapp>
@@ -46,7 +51,8 @@ export class App extends PureComponent {
                 data-name="listLoader"
                 size="20px"
                 gap={4}
-                color="#cccccc"
+                color="rgba(23, 29, 230, 0.8)"
+                thickness={2}
               />
             )}
           </AreaWrapper>

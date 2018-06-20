@@ -31,7 +31,11 @@ export class MapContainer extends PureComponent {
     const placemark = new mapContext.Placemark(
       obj.coords,
       { balloonContent: obj.name },
-      { draggable: true }
+      {
+        draggable: true,
+        preset: "islands#blueIcon",
+        iconColor: "#171de6"
+      }
     );
 
     this.pmCollection.add(placemark);
@@ -71,8 +75,8 @@ export class MapContainer extends PureComponent {
               coordinates: [[...items[i].coords], [...items[i + 1].coords]]
             }}
             options={{
-              strokeColor: "#269afb",
-              opacity: 0.7,
+              strokeColor: "#171de6",
+              opacity: 0.6,
               strokeWidth: 4
             }}
           />
